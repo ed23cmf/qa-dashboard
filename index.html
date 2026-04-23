@@ -26,6 +26,10 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6f
 .gf-btn.active-2{background:#c0392b;color:#fff;border-color:#c0392b}
 .gf-btn.active-3{background:#d63031;color:#fff;border-color:#d63031}
 .gf-label{margin-left:auto;font-size:13px;color:#636e72;font-weight:600}
+.gf-sep{width:1px;height:28px;background:#dfe6e9;margin:0 4px}
+.gf-sel{padding:8px 28px 8px 12px;border-radius:8px;border:2px solid #dfe6e9;background:#fff;font-size:13px;font-weight:600;color:#2d3436;cursor:pointer;transition:all .2s;font-family:inherit;min-width:170px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23636e72' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 10px center}
+.gf-sel:hover{border-color:#6c5ce7;color:#6c5ce7}
+.gf-sel.gf-sel-active{background-color:#6c5ce7;color:#fff;border-color:#6c5ce7;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffffff' d='M0 0l5 6 5-6z'/></svg>")}
 
 .hero{background:#fff;border-radius:14px;padding:30px 36px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;align-items:center;gap:40px}
 .ring{position:relative;width:130px;height:130px;flex-shrink:0}
@@ -90,6 +94,9 @@ footer{text-align:center;padding:20px;font-size:12px;color:#636e72}
 <button class="gf-btn" data-u="2" onclick="setFilter(this)">2 - Must action</button>
 <button class="gf-btn" data-u="1" onclick="setFilter(this)">1 - If time allows</button>
 <button class="gf-btn" data-u="0" onclick="setFilter(this)">0 - Low priority</button>
+<div class="gf-sep"></div>
+<label for="uf">Unit:</label>
+<select id="uf" class="gf-sel" onchange="setUnitFilter(this)"></select>
 <span class="gf-label" id="gfl"></span>
 </div>
 
@@ -141,6 +148,31 @@ var AC={"PDF":"#0984e3","Video":"#6c5ce7","Interactive":"#00cec9","PNG":"#fdcb6e
 document.getElementById("ts").textContent="Last refreshed: "+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
 
 var currentFilter = "";
+var currentUnit = "";
+
+// Natural sort helper so "Year 2 Unit 1" comes before "Year 10 Unit 1"
+function unitSort(a, b) {
+  var ax = a.match(/(\d+)/g), bx = b.match(/(\d+)/g);
+  var an = ax ? ax.map(Number) : [], bn = bx ? bx.map(Number) : [];
+  for (var i=0; i<Math.max(an.length, bn.length); i++) {
+    var av = an[i] == null ? -1 : an[i];
+    var bv = bn[i] == null ? -1 : bn[i];
+    if (av !== bv) return av - bv;
+  }
+  return a.localeCompare(b);
+}
+
+function populateUnitFilter() {
+  var seen = {};
+  for (var i=0; i<D.length; i++) { seen[D[i].c] = true; }
+  var units = Object.keys(seen).sort(unitSort);
+  var sel = document.getElementById("uf");
+  var opts = '<option value="">All units</option>';
+  for (var i=0; i<units.length; i++) {
+    opts += '<option value="'+units[i].replace(/"/g,'&quot;')+'">'+units[i]+'</option>';
+  }
+  sel.innerHTML = opts;
+}
 
 function setFilter(btn) {
   var btns = document.querySelectorAll(".gf-btn");
@@ -157,12 +189,19 @@ function setFilter(btn) {
   renderAll();
 }
 
+function setUnitFilter(sel) {
+  currentUnit = sel.value;
+  sel.className = "gf-sel" + (currentUnit ? " gf-sel-active" : "");
+  renderAll();
+}
+
 function getFiltered() {
-  if (currentFilter === "") return D;
-  var uVal = parseInt(currentFilter);
   var out = [];
+  var uVal = currentFilter === "" ? null : parseInt(currentFilter);
   for (var i=0; i<D.length; i++) {
-    if (D[i].u === uVal) out.push(D[i]);
+    if (uVal !== null && D[i].u !== uVal) continue;
+    if (currentUnit && D[i].c !== currentUnit) continue;
+    out.push(D[i]);
   }
   return out;
 }
@@ -176,13 +215,17 @@ function renderAll() {
   var P = T > 0 ? Math.round((A/T)*100) : 0;
 
   // Filter label
-  if (currentFilter === "") {
+  var hasU = currentFilter !== "";
+  var hasUnit = currentUnit !== "";
+  if (!hasU && !hasUnit) {
     document.getElementById("gfl").textContent = "Showing all " + D.length + " issues";
     document.getElementById("ph").textContent = "Overall Progress";
   } else {
-    var m = UM[parseInt(currentFilter)];
     document.getElementById("gfl").textContent = "Showing " + T + " of " + D.length + " issues";
-    document.getElementById("ph").textContent = "Progress - Urgency " + currentFilter + " (" + m.l + ")";
+    var parts = [];
+    if (hasU) parts.push("Urgency " + currentFilter + " (" + UM[parseInt(currentFilter)].l + ")");
+    if (hasUnit) parts.push(currentUnit);
+    document.getElementById("ph").textContent = "Progress - " + parts.join(" / ");
   }
 
   // Progress ring
@@ -255,6 +298,7 @@ function renderAll() {
   document.getElementById("il").innerHTML = ih || '<div style="color:#636e72;font-size:13px;padding:12px">No issues for this filter</div>';
 }
 
+populateUnitFilter();
 renderAll();
 </script>
 </body>
