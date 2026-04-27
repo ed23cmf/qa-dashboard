@@ -5,301 +5,4577 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Product QA Audit Dashboard</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f5f6fa;color:#2d3436}
-.hdr{background:linear-gradient(135deg,#2d3436,#636e72);color:#fff;padding:28px 40px;display:flex;justify-content:space-between;align-items:center}
-.hdr h1{font-size:22px;font-weight:600}
-.hdr-sub{font-size:13px;opacity:.7;margin-top:4px}
-.hdr-r{text-align:right;font-size:13px;opacity:.85}
-.rbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;margin-top:6px}
-.rbtn:hover{background:rgba(255,255,255,.25)}
-.wrap{max-width:1280px;margin:0 auto;padding:24px}
+:root {
+  --bg: #0f1419;
+  --panel: #1a2028;
+  --panel-2: #232b36;
+  --border: #2d3744;
+  --text: #e8ecf1;
+  --text-dim: #9aa5b1;
+  --accent: #4f9eff;
+  --accent-2: #6db5ff;
+  --green: #4ade80;
+  --yellow: #fbbf24;
+  --orange: #fb923c;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+  --cyan: #22d3ee;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+  line-height: 1.5;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.header h1 { font-size: 24px; font-weight: 600; }
+.header .meta { color: var(--text-dim); font-size: 13px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.card h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.span-3 { grid-column: span 3; }
+.span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+.span-7 { grid-column: span 7; }
+.span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
 
-/* Global filter bar */
-.gf{background:#fff;border-radius:14px;padding:16px 28px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.gf label{font-size:14px;font-weight:600;color:#2d3436}
-.gf-btn{padding:8px 18px;border-radius:8px;border:2px solid #dfe6e9;background:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
-.gf-btn:hover{border-color:#6c5ce7;color:#6c5ce7}
-.gf-btn.active{background:#6c5ce7;color:#fff;border-color:#6c5ce7}
-.gf-btn.active-0{background:#b2bec3;color:#fff;border-color:#b2bec3}
-.gf-btn.active-1{background:#f39c12;color:#fff;border-color:#f39c12}
-.gf-btn.active-2{background:#c0392b;color:#fff;border-color:#c0392b}
-.gf-btn.active-3{background:#d63031;color:#fff;border-color:#d63031}
-.gf-label{margin-left:auto;font-size:13px;color:#636e72;font-weight:600}
-.gf-sep{width:1px;height:28px;background:#dfe6e9;margin:0 4px}
-.gf-sel{padding:8px 28px 8px 12px;border-radius:8px;border:2px solid #dfe6e9;background:#fff;font-size:13px;font-weight:600;color:#2d3436;cursor:pointer;transition:all .2s;font-family:inherit;min-width:170px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23636e72' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 10px center}
-.gf-sel:hover{border-color:#6c5ce7;color:#6c5ce7}
-.gf-sel.gf-sel-active{background-color:#6c5ce7;color:#fff;border-color:#6c5ce7;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23ffffff' d='M0 0l5 6 5-6z'/></svg>")}
+@media (max-width: 1100px) {
+  .span-3, .span-4, .span-5 { grid-column: span 6; }
+  .span-7, .span-8 { grid-column: span 12; }
+}
+@media (max-width: 700px) {
+  .span-3, .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+}
 
-.hero{background:#fff;border-radius:14px;padding:30px 36px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;align-items:center;gap:40px}
-.ring{position:relative;width:130px;height:130px;flex-shrink:0}
-.ring svg{transform:rotate(-90deg)}
-.ring .pl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:30px;font-weight:700;color:#6c5ce7}
-.pd{flex:1}
-.pd h2{font-size:18px;margin-bottom:6px}
-.pd p{color:#636e72;font-size:14px;line-height:1.5}
-.ps{display:flex;gap:32px;margin-top:16px}
-.ps div{text-align:center}
-.ps .v{font-size:26px;font-weight:700}
-.ps .l{font-size:12px;color:#636e72;text-transform:uppercase;letter-spacing:.5px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
-@media(max-width:900px){.g2{grid-template-columns:1fr}}
-.cd{background:#fff;border-radius:14px;padding:24px 28px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.cd h3{font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:#636e72;margin-bottom:18px}
-.br{display:flex;align-items:center;margin-bottom:10px}
-.bl{width:110px;font-size:13px;flex-shrink:0;text-align:right;padding-right:12px}
-.bt{flex:1;height:26px;background:#edf2f7;border-radius:6px;position:relative;overflow:hidden}
-.bf{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:600;color:#fff;min-width:28px}
-.bc{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#636e72}
-.ct{width:100%;border-collapse:collapse;font-size:13px}
-.ct th{text-align:left;padding:8px 10px;border-bottom:2px solid #dfe6e9;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#636e72}
-.ct td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
-.ct tr:hover td{background:#f8f9ff}
-.mb{width:60px;height:6px;background:#edf2f7;border-radius:3px;display:inline-block;vertical-align:middle;margin-left:6px}
-.mbf{height:100%;border-radius:3px;background:#00b894}
-.rl{list-style:none}
-.rl li{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
-.rl li:last-child{border:none}
-.rd{width:10px;height:10px;border-radius:50%;margin-right:10px;flex-shrink:0}
-.rc{margin-left:auto;font-weight:600}
-.il{max-height:420px;overflow-y:auto}
-.ic{padding:12px 16px;border:1px solid #dfe6e9;border-radius:10px;margin-bottom:8px;font-size:13px}
-.ic:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.it{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.icr{font-weight:600}
-.ib{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600}
-.icm{color:#636e72;line-height:1.4}
-.im{display:flex;gap:16px;margin-top:6px;font-size:12px;color:#636e72;flex-wrap:wrap}
-.b0{background:#dfe6e9;color:#636e72}
-.b1{background:#ffeaa7;color:#856404}
-.b2{background:#fab1a0;color:#c0392b}
-.b3{background:#ff7675;color:#fff}
-.sd{color:#00b894;font-weight:600}
-.sp{color:#e17055}
-footer{text-align:center;padding:20px;font-size:12px;color:#636e72}
+/* Progress ring */
+.progress-wrap { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+.ring { position: relative; width: 180px; height: 180px; }
+.ring svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--panel-2); stroke-width: 14; }
+.ring-fg { fill: none; stroke: var(--accent); stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+.ring-label {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.ring-label .pct { font-size: 36px; font-weight: 700; }
+.ring-label .small { font-size: 12px; color: var(--text-dim); }
+.progress-stats {
+  display: flex; gap: 16px; justify-content: center; width: 100%;
+  border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;
+}
+.stat { text-align: center; flex: 1; }
+.stat .v { font-size: 22px; font-weight: 600; }
+.stat .l { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat.actioned .v { color: var(--green); }
+.stat.out .v { color: var(--orange); }
+
+/* Bar charts */
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+.bar-label { flex: 0 0 110px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-track { flex: 1; background: var(--panel-2); height: 22px; border-radius: 4px; overflow: hidden; position: relative; }
+.bar-fill { height: 100%; transition: width 0.6s ease; border-radius: 4px; }
+.bar-value { flex: 0 0 32px; text-align: right; font-weight: 600; font-size: 13px; }
+
+/* Urgency cards */
+.urg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.urg-cell {
+  background: var(--panel-2);
+  padding: 14px 8px;
+  border-radius: 8px;
+  text-align: center;
+  border-top: 3px solid var(--border);
+}
+.urg-cell.u0 { border-top-color: var(--green); }
+.urg-cell.u1 { border-top-color: var(--yellow); }
+.urg-cell.u2 { border-top-color: var(--orange); }
+.urg-cell.u3 { border-top-color: var(--red); }
+.urg-cell .n { font-size: 26px; font-weight: 700; }
+.urg-cell .lab { font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; }
+.urg-legend {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Responsibility */
+.resp-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.resp-row:last-child { border-bottom: 0; }
+.resp-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--accent); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 14px;
+}
+.resp-info { flex: 1; }
+.resp-name { font-weight: 500; font-size: 14px; }
+.resp-meta { font-size: 11px; color: var(--text-dim); }
+.resp-bar {
+  width: 100%; height: 6px; background: var(--panel-2);
+  border-radius: 3px; margin-top: 4px; overflow: hidden;
+}
+.resp-bar-fill { height: 100%; background: var(--green); border-radius: 3px; }
+.resp-stats { font-size: 12px; color: var(--text-dim); text-align: right; }
+
+/* Filters */
+.filters {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.filter {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter:hover { border-color: var(--accent); }
+.filter.active { background: var(--accent); border-color: var(--accent); color: white; }
+.search {
+  flex: 1; min-width: 200px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.search:focus { outline: none; border-color: var(--accent); }
+
+/* Issue table */
+.issues-wrap { max-height: 600px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { position: sticky; top: 0; background: var(--panel-2); z-index: 1; }
+th {
+  text-align: left; padding: 10px 12px; font-weight: 600;
+  color: var(--text-dim); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:hover { background: var(--panel-2); }
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-pdf { background: rgba(248, 113, 113, 0.15); color: var(--red); }
+.tag-video { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
+.tag-interactive { background: rgba(34, 211, 238, 0.15); color: var(--cyan); }
+.tag-png { background: rgba(244, 114, 182, 0.15); color: var(--pink); }
+.tag-audio { background: rgba(251, 191, 36, 0.15); color: var(--yellow); }
+.tag-step { background: rgba(74, 222, 128, 0.15); color: var(--green); }
+.tag-other { background: rgba(154, 165, 177, 0.15); color: var(--text-dim); }
+.urg-pill {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 22px;
+  color: white;
+}
+.urg-pill.u0 { background: var(--green); }
+.urg-pill.u1 { background: var(--yellow); color: #1a1a1a; }
+.urg-pill.u2 { background: var(--orange); }
+.urg-pill.u3 { background: var(--red); }
+.urg-pill.un { background: var(--text-dim); }
+.actioned-y { color: var(--green); font-weight: 600; }
+.actioned-n { color: var(--text-dim); }
+.comment-cell { max-width: 360px; }
+.empty {
+  text-align: center; padding: 40px; color: var(--text-dim); font-size: 14px;
+}
+.results-count { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
 </style>
 </head>
 <body>
-<div class="hdr">
-<div><h1>Product QA Audit Dashboard</h1><div class="hdr-sub">Internal Quality Assurance - 2026</div></div>
-<div class="hdr-r"><div id="ts"></div><button class="rbtn" onclick="location.reload()">Refresh</button></div>
-</div>
-<div class="wrap">
 
-<!-- GLOBAL URGENCY FILTER -->
-<div class="gf">
-<label>View by urgency:</label>
-<button class="gf-btn active" data-u="" onclick="setFilter(this)">All</button>
-<button class="gf-btn" data-u="3" onclick="setFilter(this)">3 - Critical</button>
-<button class="gf-btn" data-u="2" onclick="setFilter(this)">2 - Must action</button>
-<button class="gf-btn" data-u="1" onclick="setFilter(this)">1 - If time allows</button>
-<button class="gf-btn" data-u="0" onclick="setFilter(this)">0 - Low priority</button>
-<div class="gf-sep"></div>
-<label for="uf">Unit:</label>
-<select id="uf" class="gf-sel" onchange="setUnitFilter(this)"></select>
-<span class="gf-label" id="gfl"></span>
+<div class="header">
+  <div>
+    <h1>Product QA Audit Dashboard</h1>
+    <div class="meta">2026 QA · Internal review log</div>
+  </div>
+  <div class="meta" id="updated"></div>
 </div>
 
-<!-- PROGRESS -->
-<div class="hero">
-<div class="ring">
-<svg width="130" height="130" viewBox="0 0 130 130">
-<circle cx="65" cy="65" r="56" fill="none" stroke="#edf2f7" stroke-width="12"></circle>
-<circle id="pc" cx="65" cy="65" r="56" fill="none" stroke="#6c5ce7" stroke-width="12" stroke-linecap="round" stroke-dasharray="351.86" stroke-dashoffset="351.86"></circle>
-</svg>
-<div class="pl" id="pl">0%</div>
-</div>
-<div class="pd">
-<h2 id="ph">Overall Progress</h2>
-<p id="pp"></p>
-<div class="ps">
-<div><div class="v" id="st" style="color:#0984e3">0</div><div class="l">Total Issues</div></div>
-<div><div class="v" id="sa" style="color:#00b894">0</div><div class="l">Actioned</div></div>
-<div><div class="v" id="sr" style="color:#e17055">0</div><div class="l">Remaining</div></div>
-</div>
-</div>
+<div class="grid">
+
+  <div class="card span-3">
+    <h2>Overall Progress</h2>
+    <div class="progress-wrap">
+      <div class="ring">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="78"></circle>
+          <circle class="ring-fg" id="ringFg" cx="90" cy="90" r="78"
+                  stroke-dasharray="490" stroke-dashoffset="490"></circle>
+        </svg>
+        <div class="ring-label">
+          <div class="pct" id="ringPct">0%</div>
+          <div class="small">Actioned</div>
+        </div>
+      </div>
+      <div class="progress-stats">
+        <div class="stat actioned"><div class="v" id="sActioned">0</div><div class="l">Done</div></div>
+        <div class="stat out"><div class="v" id="sOut">0</div><div class="l">Open</div></div>
+        <div class="stat"><div class="v" id="sTotal">0</div><div class="l">Total</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card span-4">
+    <h2>Scope of Work · Asset Type</h2>
+    <div id="assetBars"></div>
+  </div>
+
+  <div class="card span-5">
+    <h2>Urgency Breakdown</h2>
+    <div class="urg-grid">
+      <div class="urg-cell u0"><div class="n" id="u0">0</div><div class="lab">0 · Optional</div></div>
+      <div class="urg-cell u1"><div class="n" id="u1">0</div><div class="lab">1 · If Time</div></div>
+      <div class="urg-cell u2"><div class="n" id="u2">0</div><div class="lab">2 · Must Action</div></div>
+      <div class="urg-cell u3"><div class="n" id="u3">0</div><div class="lab">3 · Urgent</div></div>
+    </div>
+    <div class="urg-legend">
+      <strong>0</strong> Doesn't need to be actioned ·
+      <strong>1</strong> Should be actioned in next update if time/budget allow ·
+      <strong>2</strong> Must be actioned in next update ·
+      <strong>3</strong> Must be acknowledged to users and actioned this month
+    </div>
+  </div>
+
+  <div class="card span-5">
+    <h2>Assigned Responsibility</h2>
+    <div id="respList"></div>
+  </div>
+
+  <div class="card span-7">
+    <h2>Top 10 Courses by Issue Count</h2>
+    <div id="courseBars"></div>
+  </div>
+
+  <div class="card span-12">
+    <h2>Issue List</h2>
+    <div class="filters">
+      <input type="text" class="search" id="searchInput" placeholder="Search comments, lessons, courses...">
+      <button class="filter active" data-filter="status" data-value="all">All</button>
+      <button class="filter" data-filter="status" data-value="open">Open</button>
+      <button class="filter" data-filter="status" data-value="done">Done</button>
+      <span style="width: 12px;"></span>
+      <button class="filter active" data-filter="urgency" data-value="all">All Urgency</button>
+      <button class="filter" data-filter="urgency" data-value="3">U3</button>
+      <button class="filter" data-filter="urgency" data-value="2">U2</button>
+      <button class="filter" data-filter="urgency" data-value="1">U1</button>
+      <button class="filter" data-filter="urgency" data-value="0">U0</button>
+      <span style="width: 12px;"></span>
+      <button class="filter active" data-filter="asset" data-value="all">All Assets</button>
+      <button class="filter" data-filter="asset" data-value="PDF">PDF</button>
+      <button class="filter" data-filter="asset" data-value="Video">Video</button>
+      <button class="filter" data-filter="asset" data-value="Interactive">Interactive</button>
+      <button class="filter" data-filter="asset" data-value="PNG">PNG</button>
+      <button class="filter" data-filter="asset" data-value="Audio">Audio</button>
+      <button class="filter" data-filter="asset" data-value="Step">Step</button>
+    </div>
+    <div class="results-count" id="resultsCount"></div>
+    <div class="issues-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Lesson</th>
+            <th>Step</th>
+            <th>Comment</th>
+            <th>Action</th>
+            <th>Asset</th>
+            <th>U</th>
+            <th>Owner</th>
+            <th>Done</th>
+          </tr>
+        </thead>
+        <tbody id="issueBody"></tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
-<!-- SCOPE + RESPONSIBILITY -->
-<div class="g2">
-<div class="cd"><h3>Scope of Work by Asset Type</h3><div id="ab"></div></div>
-<div class="cd"><h3>Assigned Responsibility</h3><ul class="rl" id="rl"></ul></div>
-</div>
-
-<!-- COURSES -->
-<div class="cd" style="margin-bottom:24px">
-<h3>Issues by Course</h3>
-<table class="ct" id="ctb"><thead><tr><th>Course</th><th>Issues</th><th>Actioned</th><th>Progress</th></tr></thead><tbody></tbody></table>
-</div>
-
-<!-- FULL ISSUE LIST -->
-<div class="cd" style="margin-bottom:24px">
-<h3>All Issues</h3>
-<div class="il" id="il"></div>
-</div>
-
-</div>
-<footer>Product QA Audit Dashboard - Data sourced from Internal QA Log.xlsx</footer>
 <script>
-var D=[{"c": "Year 3 Unit 1", "s": "Video", "cm": "She says that the first five notes on the instrument will be C \u2013 G, which is not always the case, especially if using keyboards/piano", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Subject Knowledge", "cm": "Copy error- guiro is not a tuned percussion instrument", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 3 Unit 1", "s": "Teach 3", "cm": "Challenging for pupils to copy without being able to clearly see what the notes are. Can they be written out somewhere on the slide? Or the notes more clearly labelled.  Update pause buttons to say 'Show notes' instead of 'Reminder'", "ac": "Update interactive", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 3 Unit 1", "s": "Introduce 2", "cm": "Spacing issue with notation", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Introduce 3", "cm": "Spacing issue with notation", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Teach 1", "cm": "Spacing issue with notation", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Teach 3", "cm": "Spacing issue with notation", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Teach 5", "cm": "Incorrect audio. Rhythm doesn't match graphic", "ac": "Update audio, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 3 Unit 1", "s": "Teach 9", "cm": "Add notation from previous slide onto this one", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 1", "s": "Video", "cm": "Video says slide 3 is harder to play than slide 4 but it is the other way round", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Years 1 to 6", "s": "All singing warm ups", "cm": "Show lyrics on screen, fix copy on KS2 warm up 11 (see JN notes on 5_2)", "ac": "Update PDFs to show lyrics", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 2", "s": "Video", "cm": "Says that xylophones play slower, thoughtful melodies whereas glockenspiels are more lively. This isn\u2019t true \u2013 there are lots of lively xylophone pieces", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 3 Unit 2", "s": "Vocabulary ", "cm": "Copy error- 'boomng'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 3 Unit 2", "s": "Teach 13", "cm": "Copy error- D should be a minim, not a crotchet", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 3 Unit 2", "s": "Introduce 2", "cm": "Graphic shows North America lit up buit it shouldn't be", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 3 Unit 2", "s": "Teach 10", "cm": "Audio and PNG incorrect", "ac": "Update PNG, then video (with new audio and visual)", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 4 Unit 1", "s": "Video", "cm": "Says that notes above the middle line have stems pointing up, and below the line they have stems pointing down. This is the wrong way around. Also, these should be called stems, rather than tails", "ac": "Rescript and record VO, update video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Knowledge Check", "cm": "Copy error- answers should say 'The higher its pitch' and 'The lower its pitch' (no apostrophes", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Worksheets", "cm": "Copy error- second line of music doesn't match audio. (See JN review)", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Teach 3", "cm": "Copy error- second line of music doesn't match audio. (See JN review)", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 4 Unit 1", "s": "Video", "cm": "Several errors. See JN video", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Knowledge Check", "cm": "Graphic should show a small space after minim", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Introduce 1", "cm": "Several errors", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 4 Unit 1", "s": "Video", "cm": "Says \u201ctum is always the stronger and longer beat\u201d but it should be \u201cstronger and longer note\u201d as the beat isn\u2019t changing (said three times in the video)", "ac": "Rescript segment and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Lyrics", "cm": "London Bridge audio is incorrect \u2013 the rhythm should be tum-ti ta ta but it is sung as just ta ta ta ta on \u2018London Bridge is\u2019.", "ac": "Update step with audio", "as": "Unknown", "at": ["Other"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 1", "s": "Teach 1", "cm": "As above", "ac": "Update audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 4 Unit 1", "s": "Introduce 1", "cm": "Rhythm 4 audio incorrect", "ac": "Update audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-01"}, {"c": "Year 4 Unit 1", "s": "Video", "cm": "Happy Birthday graphic doesn't need piano finger numbers ", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Video", "cm": "tum-ti, tim-ka graphic needs to be updated to match JN version", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Introduce 2", "cm": "tum-ti graphic needs to be updated to match JN version", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Teach 1", "cm": "tum-ti graphic needs to be updated to match JN version", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Teach 2", "cm": "Please can we get rid of the gaps between the same rhythms, so four lots of tum-ti without any gaps, and four lots of tim-ka without gaps. There can be a gap between the two different rhythms", "ac": "Update audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Teach 4", "cm": "Video needs to fade and end from 11 seconds", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 1", "s": "Kodaly Rhythms Worksheet", "cm": "Boxes for q1 need to be twice as deep", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Change wording from and 'gradual swelling of volume' to 'gradually getting louder'", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Make music image larger (see JN reference)", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Video", "cm": " it\u2019s worth taking out the explanation about \u2018tempi\u2019 so that we\u2019re not contradicting ourselves later when she says 'tempos'", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Change wording from 'become quieter' to 'gradually getting quieter' and 'become louder' to 'gradually getting louder'", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Check answers are correct?", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Teach 5", "cm": "Start audio at 24 secinds so it begins with accelerando", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Video", "cm": "Show words and music as ostinato is demonstrated", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Video", "cm": "She says 'tone' when she should have said either 'key' or 'tonality'", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Video", "cm": "She says 'tone' when she should have said either 'key' or 'tonality'", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Reword question from 'Would you tap your foot to?' to 'Which would you tap your foot to?'", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Knowledge Check", "cm": "Says 'tone' where it should say 'tonality' in one of the answers", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Introduce 1", "cm": "Remove either bullet points or numbers", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Introduce 2", "cm": "Remove either bullet points or numbers", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Introduce 3", "cm": "Remove either bullet points or numbers", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 4 Unit 2", "s": "Listening Quiz Worksheets", "cm": "Second piece, question 2 should be 'How does the conductor tell the musicians to play this way?", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 4 Unit 2", "s": "Listening Quiz Answer Sheet", "cm": "Second piece, question 2 should be 'How does the conductor tell the musicians to play this way?", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Rhythm Flashcards", "cm": "First card shows wrong copy (titi-tika instead of ti-tika)", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 4", "s": "Key Questions", "cm": "Missing PDF", "ac": "New PDF request", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Poster", "cm": "Update to show longer tum-ti rhythms", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Subject Knowledge", "cm": "Update with aligned note and moved comma", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Knowledge Check", "cm": "Question 5 copy edit", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Introduce 1", "cm": "Treble clef misaligned and so are some notes", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Introduce 2", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Introduce 3", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Introduce 4", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 1", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 2", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 10", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 11", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 21", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 22", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Teach 23", "cm": "Notes sometimes misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Reflect 2", "cm": "Treble clef misaligned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Video", "cm": "Add graphics to recap of key terms", "ac": "Update Video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 1", "s": "Video", "cm": "Updates needed on glock graphics, maybe swap with keyboards", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 1", "s": "Video", "cm": "better if they could show the beats with their hands, (bobbing hands on the silent beats as you say the extra numbers). Also, he counts the beat a little bit too fast", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 1", "s": "Video", "cm": "Several errors, see notes", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Subject Knowledge", "cm": "Copy edits needed", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Knowledge Check", "cm": "Edit question three so recoridng box doesn't cover rhythm", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 1, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 1", "s": "Subject Knowledge", "cm": "Needs new pdf made", "ac": "New PDF request", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Video", "cm": "More support for composition", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 0, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 2", "s": "Subject Knowledge", "cm": "Copy errors on PDF", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Teach 5", "cm": "Wrong video", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 2", "s": "Teach 6", "cm": "Wrong video", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 2", "s": "Video", "cm": "Rescript and refilm", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Knowledge Check", "cm": "Remove '3/4 time' from bottom of final image", "ac": "Update PNG and KC copy", "as": "PNG", "at": ["PNG"], "u": 1, "r": "Brandon", "d": 0, "dl": ""}, {"c": "Year 5 Unit 2", "s": "Worksheets", "cm": "Number first question", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 2", "s": "Teach 3", "cm": "Remove '3/4 time' from bottom of slide", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 2", "s": "Video", "cm": "Add keyboard graphic to show G# ", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 5 Unit 2", "s": "Subject Knowledge", "cm": "Missing PDF", "ac": "New PDF request", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Worksheets", "cm": "Keyboard image needs to show the note G# ", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Video", "cm": "Fix graphic to show 'claves or drumsticks'", "ac": "Update Video", "as": "Video", "at": ["Video"], "u": 3, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 2", "s": "Guidance sheet", "cm": "Fix copy", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Teach 3", "cm": "Update audio on video to match graphic", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 1, "dl": "2026-02-26"}, {"c": "Year 5 Unit 2", "s": "Teach 7", "cm": "Edit graphic to remove 'put down'", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Teach 10", "cm": "Change 'put' to 'table'  to match slide 8", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 5 Unit 2", "s": "Subject Knowledge", "cm": "Some words not capitalised", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 6 Unit 1", "s": "Subject Knowledge", "cm": "Update definitions with Josie's version", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Knowledge Check", "cm": "4 beat question is registering the wrong answer", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 7", "cm": "Add Kodaly words to audio", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 8", "cm": "New graphics using Josie's notes", "ac": "Request new PNGs, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Subject Knowledge", "cm": "Copy edit for grammatical accuracy", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Lesson plan", "cm": "Copy missing for Teach 2", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "All Files", "cm": "Include new lesson plan as above", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Knowledge Check", "cm": "Remove quiz", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Worksheets", "cm": "Copy edit ", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Lesson plan", "cm": "New pdf from above", "ac": "Update step with new file", "as": "Unknown", "at": ["Other"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 2", "cm": "Edit audio to begin with voice saying 1,2,3,4,", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 3", "cm": "Update graphic copy", "ac": "Update PNG, then video", "as": "PNG, then video", "at": ["Video", "PNG"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Subject Knowledge", "cm": "Copy edit changing all 'staff' to 'stave'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Knowledge Check", "cm": "Update treble clef image to just the treble clef symbol", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Lesson plan", "cm": "Update copy in introduce section to say 'show slide 3 and 4 with mnemonics'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "All Files", "cm": "Include new lesson plan as above", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Lesson plan", "cm": "New pdf from above", "ac": "Update step with new file", "as": "Unknown", "at": ["Other"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Subject Knowledge", "cm": "Copy edit first para, delete second page", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 3", "cm": "Copy edit on PDF", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 7", "cm": "Copy edit on PDF", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 1", "s": "Teach 8", "cm": "Add metronome to audio", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Video", "cm": "Cut 2:00 to 2:12 'Drawing attention... his hearing'", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-03-23"}, {"c": "Year 6 Unit 2", "s": "Knowledge Check", "cm": "Question 2 typo, incorrect answer selection", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Flashcards", "cm": "Copy error on first flashcard ", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Subject Knowledge", "cm": "Capitalisation inconsistencies in copy", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Subject Knowledge", "cm": "Grammatical errors and incorrect content.", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Teach 6", "cm": "New audio needed to play correct melodies", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 3, "r": "Ciara", "d": 0, "dl": "Mar "}, {"c": "Year 6 Unit 2", "s": "Video", "cm": "Remove suggestion to adapt warm ups with other nursery rhymes", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 6 Unit 2", "s": "Teach 5", "cm": "Copy error on slide", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Subject Knowledge", "cm": "Unclear and unnecessary copy at start. Edit by JN notes.", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Worksheets", "cm": "Element word bank- remove instrument examples from each family", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Assessment sheet", "cm": "Copy edit: missing hyphen from 'call-and-response'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Worksheets", "cm": "Elements word bank as above", "ac": "Update step with new file", "as": "Unknown", "at": ["Other"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 6 Unit 2", "s": "Introduce 1", "cm": "Remove text in brackets from slide.", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Audit", "cm": "un-tuned' doesn't need an apostrophe", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Subject Knowledge", "cm": "first paragraph missing space in 'are determined'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Knowledge Check", "cm": "Quiz in wrong place?", "ac": "Remove and reassign new quiz", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Lesson plan", "cm": "\u2018p\u2019 missing from the word \u2018play\u2019 in curriculum links box", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Lesson plan", "cm": "New pdf from above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Knowledge Check", "cm": "Several copy errors including title", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Warm Up", "cm": "Move step (Effects entire unit)", "ac": "Move step", "as": "Step", "at": ["Step"], "u": 1, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Lesson plan", "cm": "Remove word 'singing' from warm up box", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Video", "cm": "Demonstrate ti-ti and too rhythms in hot cross buns. Remove line 'As we reach the end... ta, ti-ti'", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 1", "s": "Subject Knowledge", "cm": "Copy edits needed, a movement of spacing of notation in table", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Knowledge Check", "cm": "Question 2 is repeated and graphics are unclear", "ac": "Update PNG and KC copy", "as": "PNG, then interactive", "at": ["Interactive", "PNG"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Lesson plan", "cm": "Colours of orange and red text indistinguishable", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Unknown", "at": ["Other"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Worksheets", "cm": "Notes distorted on sheet", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 1", "s": "Reflect", "cm": "Move yellow notes to be same height", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 2", "s": "Subject Knowledge 2", "cm": "Reorder table from Grave to Prestissimo", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 2", "s": "Lesson plan", "cm": "Change copy from 'what makes it difficult to clap along to music?' to 'what helps you clap along to the music?'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 2", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 1, "r": "Brandon", "d": 0, "dl": ""}, {"c": "Year 2 Unit 2", "s": "Teach 3", "cm": "Video is dancing to a different beat than that of the music", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 2", "s": "Subject Knowledge", "cm": "Copy edit about 'classical tradition'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 2", "s": "Worksheets", "cm": "Remove step", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 2", "s": "Knowledge Check", "cm": "Apostrophe missing from question 2 after \u2018Peter and the Wolf", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 and Year 2 Unit 1", "s": "Warm Up", "cm": "Move to be after LO", "ac": "Move step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": ""}, {"c": "Year 1 All units", "s": "Warm Up 2", "cm": "Update copy to not say 'such as'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 All units", "s": "Warm Up 5", "cm": "Copy werror in spelling of 'guiro'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 All units", "s": "Warm Up 6", "cm": "Remove questions", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Lyrics", "cm": "Need to add lyrics to audio", "ac": "Update audio", "as": "Audio", "at": ["Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Knowledge Check", "cm": "Update or remove two unclear questions", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Let's Sing", "cm": "Step name missing apostrophe", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 10", "cm": "Incorrect audio, should be brass", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Let's Sing", "cm": "Step name missing apostrophe", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Key Questions", "cm": "Formatting errors; bullet point and capital letter missing on last question", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Knowledge Check", "cm": "Remove", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 2", "cm": "Audio needs to change tempo throughout", "ac": "Update audio", "as": "Audio", "at": ["Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Video", "cm": "No explanation of Ta and Ti-ti or clapping demo", "ac": "Rescript and refilm", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Knowledge Check", "cm": "Unclear slides", "ac": "Update PNG", "as": "PNG, then interactive", "at": ["Interactive", "PNG"], "u": 0, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 2", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 3", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 4", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 5", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 6", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 7", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 8", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Teach 9", "cm": "Add audio", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 1", "s": "Let's Sing", "cm": "Step name missing apostrophe", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Video", "cm": "Wrong video linked", "ac": "Update vimeo link on step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Video", "cm": "Wrong video linked", "ac": "Update vimeo link on step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Knowledge Check", "cm": "Remove", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Knowledge Check", "cm": "Update 'crescendo' definition and check answers", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Knowledge Check", "cm": "Replace questions with new copy", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 2", "s": "Introduce 1", "cm": "New audio that showcases a few instruments clealry", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Reception Unit 5", "s": "Worksheets", "cm": "Remove emotion picture cards", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Video", "cm": "Cut to match changes. 3.16 cut after 'stay the same' to 'at all' at 3.20", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Lesson plan", "cm": "Remove copy on page two from '(e.g., guitar..they heard'. Adjust slide numbers for removal of slide 3", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 2", "cm": "Remove", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 3", "cm": "Rename to Teach 2", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 4", "cm": "Rename to Teach 3", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 5", "cm": "Rename to Teach 4", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Knowledge Check", "cm": "New audio needed on q 2 and q3", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Reflect", "cm": "New audio needed with better distinction in pitch and dynamics", "ac": "Update video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "All", "cm": "Re-write lesson plan and slides", "ac": "All", "as": "Unknown", "at": ["Other"], "u": 0, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 2", "cm": "Music needs to be faster tempo", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 3", "cm": "Song should be played once, then repeated at much faster tempo", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Teach 4", "cm": "Replace with PDF showing alphabet, sheep and stars", "ac": "New PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Lesson plan ", "cm": "Fix copy on page 3 to say 'slide 2' instead of 'slide 3'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 3", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Knowledge Check", "cm": "Move intructions to start of quiz and delete question 6", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "Fix copy on page 2 so 'teach 2' says 'teach 3' and Before 'demonstrate' it says 'Show slide 2 and demonstrate'", "ac": "", "as": "Unknown", "at": ["Other"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan ", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Teach 2", "cm": "Change image to another child", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 1 Unit 4", "s": "Subject Knowledge", "cm": "Fix copy to change \u2018the whole lyric for this is below\u2019 to \u2018the full lyrics for this are below\u2019", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 1 Unit 4", "s": "Knowledge Check", "cm": "Answers filed incorrectly and doesn't show which are right/wrong", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "Fix copy on page two to remove repeated 'Start by playing a very high note and ask:'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 1 Unit 4", "s": "Lesson plan ", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 1, "r": "Brandon", "d": 0, "dl": ""}, {"c": "Year 1 Unit 4", "s": "Teach 2", "cm": "Delete", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Teach 3", "cm": "Rename step as Teach 2", "ac": "Update step name", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Teach 4", "cm": "Delete", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Teach 5", "cm": "Delete", "ac": "Remove step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Video", "cm": "Wrong video linked", "ac": "Update vimeo link on step", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "Remove 'tell the pupils that you're going to practise...clap on it'. Change 'clap the rhythm' on page 4 to 'clap the beat' and remove 'Emphasise... to the rhythm'. On page 4 remove 'Clap the rhythm of their..different rhythms' and 'and see how the rhythm changes'. Add slide numbers.", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Knowledge Check", "cm": "Typo, should say \u2018pianississimo, not \u2018pianoississimo\u2019.", "ac": "Update KC copy", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "Change 'Listen to the music on the slide' to 'Listen to the music on slide 2'  ", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 1 Unit 4", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 1, "r": "Brandon", "d": 0, "dl": ""}, {"c": "Year 2 Unit 3", "s": "Knowledge Check", "cm": "Needs new audio for rhythms 2, 3 and 4", "ac": "New audio, then KC", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Warm Up", "cm": "Fix copy from 'rhythm getting faster or slower\u2019, which should be 'tempo getting faster or slower\u2019.", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Introduce 1", "cm": "Would be easier with a simpler rhythmic accompaniment, with emphasis on the beat", "ac": "Update audio then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 3", "s": "Lesson plan", "cm": "Fix slide references in introduce section", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Lesson plan", "cm": "As above", "ac": "Update step with new file", "as": "Step", "at": ["Step"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Worksheets", "cm": "Add in Do Re Mi sheet", "ac": "Create PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Teach 5", "cm": "Update PNG, 'mi' on second line should be coloured-in or not", "ac": "Update PNG, then video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Video", "cm": "Au Clair de la Lune' grpahic erros", "ac": "Update PNG, then video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Knowledge Check", "cm": "Change definitions from \u2018become louder\u2019 and \u2018become quieter\u2019 to \u2018gradually getting louder\u2019 and \u2018gradually getting quieter\u2019", "ac": "", "as": "Interactive", "at": ["Interactive"], "u": 2, "r": "Brandon", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Subject Knowledge", "cm": "Guiro has been put in the tuned percussion column, but it should be in untuned", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Worksheets", "cm": "\u2018mi\u2019 on second line should be coloured in", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Teach 2", "cm": "\u2018mi\u2019 on second line should be coloured in", "ac": "Update PNG, then video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Teach 3", "cm": "\u2018mi\u2019 on second line should be coloured in", "ac": "Update PNG, then video", "as": "Video", "at": ["Video"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Worksheet 1", "cm": "Remove text 'without notes'", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 3", "s": "Worksheet 2", "cm": "Remove text 'without notes' and colour in the blue note on q1 and q3", "ac": "Update PDF", "as": "PDF", "at": ["PDF"], "u": 2, "r": "Ciara", "d": 0, "dl": "2026-11-01"}, {"c": "Year 2 Unit 4", "s": "Teach 5", "cm": "Add to track saying 1, 2, 3, 4, or an audible click for 4 beats with the numbers on screen?", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}, {"c": "Year 2 Unit 4", "s": "Teach 3", "cm": "As above, and could we have an instrument come in playing the melody to guide the pupils?", "ac": "New audio, then video", "as": "Audio, then video", "at": ["Video", "Audio"], "u": 1, "r": "Ciara", "d": 0, "dl": ""}];
-
-var UM={0:{l:"Low",cl:"#b2bec3",bg:"#f5f6fa",ds:"Only if content is also being changed"},1:{l:"Medium",cl:"#f39c12",bg:"#fff9e6",ds:"Next update if time/budget allow"},2:{l:"High",cl:"#c0392b",bg:"#fff0ee",ds:"Must be actioned in next update"},3:{l:"Critical",cl:"#d63031",bg:"#d63031",ds:"Acknowledge to users and action this month"}};
-var AC={"PDF":"#0984e3","Video":"#6c5ce7","Interactive":"#00cec9","PNG":"#fdcb6e","Audio":"#e17055","Step":"#00b894","Other":"#b2bec3"};
-document.getElementById("ts").textContent="Last refreshed: "+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
-
-var currentFilter = "";
-var currentUnit = "";
-
-// Natural sort helper so "Year 2 Unit 1" comes before "Year 10 Unit 1"
-function unitSort(a, b) {
-  var ax = a.match(/(\d+)/g), bx = b.match(/(\d+)/g);
-  var an = ax ? ax.map(Number) : [], bn = bx ? bx.map(Number) : [];
-  for (var i=0; i<Math.max(an.length, bn.length); i++) {
-    var av = an[i] == null ? -1 : an[i];
-    var bv = bn[i] == null ? -1 : bn[i];
-    if (av !== bv) return av - bv;
-  }
-  return a.localeCompare(b);
-}
-
-function populateUnitFilter() {
-  var seen = {};
-  for (var i=0; i<D.length; i++) { seen[D[i].c] = true; }
-  var units = Object.keys(seen).sort(unitSort);
-  var sel = document.getElementById("uf");
-  var opts = '<option value="">All units</option>';
-  for (var i=0; i<units.length; i++) {
-    opts += '<option value="'+units[i].replace(/"/g,'&quot;')+'">'+units[i]+'</option>';
-  }
-  sel.innerHTML = opts;
-}
-
-function setFilter(btn) {
-  var btns = document.querySelectorAll(".gf-btn");
-  for (var i=0; i<btns.length; i++) {
-    btns[i].className = "gf-btn";
-  }
-  var u = btn.getAttribute("data-u");
-  currentFilter = u;
-  if (u === "") {
-    btn.className = "gf-btn active";
-  } else {
-    btn.className = "gf-btn active-" + u;
-  }
-  renderAll();
-}
-
-function setUnitFilter(sel) {
-  currentUnit = sel.value;
-  sel.className = "gf-sel" + (currentUnit ? " gf-sel-active" : "");
-  renderAll();
-}
-
-function getFiltered() {
-  var out = [];
-  var uVal = currentFilter === "" ? null : parseInt(currentFilter);
-  for (var i=0; i<D.length; i++) {
-    if (uVal !== null && D[i].u !== uVal) continue;
-    if (currentUnit && D[i].c !== currentUnit) continue;
-    out.push(D[i]);
-  }
-  return out;
-}
-
-function renderAll() {
-  var F = getFiltered();
-  var T = F.length;
-  var A = 0;
-  for (var i=0; i<T; i++) { if (F[i].d === 1) A++; }
-  var R = T - A;
-  var P = T > 0 ? Math.round((A/T)*100) : 0;
-
-  // Filter label
-  var hasU = currentFilter !== "";
-  var hasUnit = currentUnit !== "";
-  if (!hasU && !hasUnit) {
-    document.getElementById("gfl").textContent = "Showing all " + D.length + " issues";
-    document.getElementById("ph").textContent = "Overall Progress";
-  } else {
-    document.getElementById("gfl").textContent = "Showing " + T + " of " + D.length + " issues";
-    var parts = [];
-    if (hasU) parts.push("Urgency " + currentFilter + " (" + UM[parseInt(currentFilter)].l + ")");
-    if (hasUnit) parts.push(currentUnit);
-    document.getElementById("ph").textContent = "Progress - " + parts.join(" / ");
-  }
-
-  // Progress ring
-  var ci = 2 * Math.PI * 56;
-  document.getElementById("pc").style.strokeDashoffset = String(ci - (ci * P / 100));
-  document.getElementById("pl").textContent = P + "%";
-  document.getElementById("st").textContent = T;
-  document.getElementById("sa").textContent = A;
-  document.getElementById("sr").textContent = R;
-  document.getElementById("pp").textContent = A + " of " + T + " issues have been actioned. " + R + " remain.";
-
-  // Asset bars
-  var ct = {}, cd = {};
-  for (var i=0; i<F.length; i++) {
-    var ts = F[i].at;
-    for (var j=0; j<ts.length; j++) {
-      ct[ts[j]] = (ct[ts[j]]||0) + 1;
-      if (F[i].d === 1) cd[ts[j]] = (cd[ts[j]]||0) + 1;
+const DATA = {
+  "total": 252,
+  "actioned": 15,
+  "outstanding": 237,
+  "assetCounts": {
+    "PDF": 95,
+    "Video": 80,
+    "Step": 36,
+    "Interactive": 28,
+    "Other": 10,
+    "Audio": 2,
+    "PNG": 1
+  },
+  "urgencyCounts": {
+    "2": 165,
+    "1": 49,
+    "0": 24,
+    "3": 9,
+    "-1": 5
+  },
+  "responsibleCounts": {
+    "Ciara": 192,
+    "Brandon": 56,
+    "Unassigned": 4
+  },
+  "courseCounts": {
+    "Year 5 Unit 1": 22,
+    "Year 6 Unit 1": 21,
+    "Year 1 Unit 1": 19,
+    "Year 4 Unit 1": 18,
+    "Year 1 Unit 4": 18,
+    "Year 5 Unit 2": 17,
+    "Year 4 Unit 2": 16,
+    "Year 1 Unit 3": 15,
+    "Year 2 Unit 1": 15,
+    "Year 2 Unit 3": 15
+  },
+  "respActioned": {
+    "Brandon": {
+      "actioned": 0,
+      "total": 56
+    },
+    "Ciara": {
+      "actioned": 15,
+      "total": 192
+    },
+    "Unassigned": {
+      "actioned": 0,
+      "total": 4
     }
-  }
-  var sr = Object.keys(ct).sort(function(a,b){ return ct[b]-ct[a]; });
-  var mx = sr.length > 0 ? ct[sr[0]] : 1;
-  var h = "";
-  if (sr.length === 0) {
-    h = '<div style="color:#636e72;font-size:13px">No issues for this filter</div>';
-  } else {
-    for (var k=0; k<sr.length; k++) {
-      var t=sr[k], c=ct[t], w=Math.max((c/mx)*100,8), co=AC[t]||"#b2bec3", dn=cd[t]||0;
-      h += '<div class="br"><div class="bl">'+t+'</div><div class="bt"><div class="bf" style="width:'+w+'%;background:'+co+'">'+c+'</div><span class="bc">'+dn+' done</span></div></div>';
+  },
+  "issues": [
+    {
+      "date": "2026-11-26",
+      "reviewer": "Josie N",
+      "course": "Year 3 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Video",
+      "comment": "She says that the first five notes on the instrument will be C \u2013 G, which is not always the case, especially if using keyboards/piano",
+      "coursesEffected": "Year 3 Unit 1, Grade 3 Unit 1",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy error- guiro is not a tuned percussion instrument",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "2",
+      "step": "Teach 3",
+      "comment": "Challenging for pupils to copy without being able to clearly see what the notes are. Can they be written out somewhere on the slide? Or the notes more clearly labelled.  Update pause buttons to say 'Show notes' instead of 'Reminder'",
+      "coursesEffected": "",
+      "action": "Update interactive",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "3",
+      "step": "Introduce 2",
+      "comment": "Spacing issue with notation",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "3",
+      "step": "Introduce 3",
+      "comment": "Spacing issue with notation",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "3",
+      "step": "Teach 1",
+      "comment": "Spacing issue with notation",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "3",
+      "step": "Teach 3",
+      "comment": "Spacing issue with notation",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "5",
+      "step": "Teach 5",
+      "comment": "Incorrect audio. Rhythm doesn't match graphic",
+      "coursesEffected": "",
+      "action": "Update audio, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "5",
+      "step": "Teach 9",
+      "comment": "Add notation from previous slide onto this one",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 1",
+      "lesson": "6 CPD",
+      "step": "Video",
+      "comment": "Video says slide 3 is harder to play than slide 4 but it is the other way round",
+      "coursesEffected": "",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-11-26",
+      "reviewer": "Josie N",
+      "course": "Years 1 to 6",
+      "lesson": "Warm ups",
+      "step": "All singing warm ups",
+      "comment": "Show lyrics on screen, fix copy on KS2 warm up 11 (see JN notes on 5_2)",
+      "coursesEffected": "All classroom courses except Rec and Grade R",
+      "action": "Update PDFs to show lyrics",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-11-26",
+      "reviewer": "Josie N",
+      "course": "Year 3 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Says that xylophones play slower, thoughtful melodies whereas glockenspiels are more lively. This isn\u2019t true \u2013 there are lots of lively xylophone pieces",
+      "coursesEffected": "Year 3 Unit 2, Grade 3 Unit 2",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Vocabulary",
+      "comment": "Copy error- 'boomng'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 2",
+      "lesson": "3",
+      "step": "Teach 13",
+      "comment": "Copy error- D should be a minim, not a crotchet",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 2",
+      "lesson": "4",
+      "step": "Introduce 2",
+      "comment": "Graphic shows North America lit up buit it shouldn't be",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 2",
+      "lesson": "5",
+      "step": "Teach 10",
+      "comment": "Audio and PNG incorrect",
+      "coursesEffected": "",
+      "action": "Update PNG, then video (with new audio and visual)",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "2026-01-14",
+      "reviewer": "Josie N",
+      "course": "Year 4 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Video",
+      "comment": "Says that notes above the middle line have stems pointing up, and below the line they have stems pointing down. This is the wrong way around. Also, these should be called stems, rather than tails",
+      "coursesEffected": "Year 4 Unit 1, Grade 4 Unit 1",
+      "action": "Rescript and record VO, update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Copy error- answers should say 'The higher its pitch' and 'The lower its pitch' (no apostrophes",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "2",
+      "step": "Worksheets",
+      "comment": "Copy error- second line of music doesn't match audio. (See JN review)",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "2",
+      "step": "Teach 3",
+      "comment": "Copy error- second line of music doesn't match audio. (See JN review)",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Several errors. See JN video",
+      "coursesEffected": "",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Knowledge Check",
+      "comment": "Graphic should show a small space after minim",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "3",
+      "step": "Introduce 1",
+      "comment": "Several errors",
+      "coursesEffected": "",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Says \u201ctum is always the stronger and longer beat\u201d but it should be \u201cstronger and longer note\u201d as the beat isn\u2019t changing (said three times in the video)",
+      "coursesEffected": "",
+      "action": "Rescript segment and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "4",
+      "step": "Lyrics",
+      "comment": "London Bridge audio is incorrect \u2013 the rhythm should be tum-ti ta ta but it is sung as just ta ta ta ta on \u2018London Bridge is\u2019.",
+      "coursesEffected": "",
+      "action": "Update step with audio",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "4",
+      "step": "Teach 1",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "4",
+      "step": "Introduce 1",
+      "comment": "Rhythm 4 audio incorrect",
+      "coursesEffected": "",
+      "action": "Update audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "Happy Birthday graphic doesn't need piano finger numbers",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "tum-ti, tim-ka graphic needs to be updated to match JN version",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5",
+      "step": "Introduce 2",
+      "comment": "tum-ti graphic needs to be updated to match JN version",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5",
+      "step": "Teach 1",
+      "comment": "tum-ti graphic needs to be updated to match JN version",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5",
+      "step": "Teach 2",
+      "comment": "Please can we get rid of the gaps between the same rhythms, so four lots of tum-ti without any gaps, and four lots of tim-ka without gaps. There can be a gap between the two different rhythms",
+      "coursesEffected": "",
+      "action": "Update audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "5",
+      "step": "Teach 4",
+      "comment": "Video needs to fade and end from 11 seconds",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 1",
+      "lesson": "6",
+      "step": "Kodaly Rhythms Worksheet",
+      "comment": "Boxes for q1 need to be twice as deep",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-01-14",
+      "reviewer": "Josie N",
+      "course": "Year 4 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Change wording from and 'gradual swelling of volume' to 'gradually getting louder'",
+      "coursesEffected": "Year 4 Unit 2, Grade 4 Unit 2",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Make music image larger (see JN reference)",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Video",
+      "comment": "it\u2019s worth taking out the explanation about \u2018tempi\u2019 so that we\u2019re not contradicting ourselves later when she says 'tempos'",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Change wording from 'become quieter' to 'gradually getting quieter' and 'become louder' to 'gradually getting louder'",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Check answers are correct?",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "2",
+      "step": "Teach 5",
+      "comment": "Start audio at 24 secinds so it begins with accelerando",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Show words and music as ostinato is demonstrated",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "She says 'tone' when she should have said either 'key' or 'tonality'",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "She says 'tone' when she should have said either 'key' or 'tonality'",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Reword question from 'Would you tap your foot to?' to 'Which would you tap your foot to?'",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Says 'tone' where it should say 'tonality' in one of the answers",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5",
+      "step": "Introduce 1",
+      "comment": "Remove either bullet points or numbers",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5",
+      "step": "Introduce 2",
+      "comment": "Remove either bullet points or numbers",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "5",
+      "step": "Introduce 3",
+      "comment": "Remove either bullet points or numbers",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "6",
+      "step": "Listening Quiz Worksheets",
+      "comment": "Second piece, question 2 should be 'How does the conductor tell the musicians to play this way?",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 4 Unit 2",
+      "lesson": "6",
+      "step": "Listening Quiz Answer Sheet",
+      "comment": "Second piece, question 2 should be 'How does the conductor tell the musicians to play this way?",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "Ciara",
+      "course": "Year 6 Unit 2",
+      "lesson": "1",
+      "step": "Rhythm Flashcards",
+      "comment": "First card shows wrong copy (titi-tika instead of ti-tika)",
+      "coursesEffected": "Grade 6 Unit 2",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "Ciara",
+      "course": "Year 5 Unit 4",
+      "lesson": "1",
+      "step": "Key Questions",
+      "comment": "Missing PDF",
+      "coursesEffected": "Grade 5 unit 4",
+      "action": "New PDF request",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "2026-05-02",
+      "reviewer": "Josie N",
+      "course": "Year 5 Unit 1",
+      "lesson": "Overview",
+      "step": "Poster",
+      "comment": "Update to show longer tum-ti rhythms",
+      "coursesEffected": "Year 4 Unit 1, Year 4 Unit 2 and SA equivalents",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Update with aligned note and moved comma",
+      "coursesEffected": "Grade 5 Unit 1",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Question 5 copy edit",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Introduce 1",
+      "comment": "Treble clef misaligned and so are some notes",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Introduce 2",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Introduce 3",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Introduce 4",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 1",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 2",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 10",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 11",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 21",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 22",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Teach 23",
+      "comment": "Notes sometimes misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "1",
+      "step": "Reflect 2",
+      "comment": "Treble clef misaligned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Video",
+      "comment": "Add graphics to recap of key terms",
+      "coursesEffected": "",
+      "action": "Update Video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Video",
+      "comment": "Updates needed on glock graphics, maybe swap with keyboards",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "better if they could show the beats with their hands, (bobbing hands on the silent beats as you say the extra numbers). Also, he counts the beat a little bit too fast",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Several errors, see notes",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edits needed",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Knowledge Check",
+      "comment": "Edit question three so recordIng box doesn't cover rhythm",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Needs new pdf made",
+      "coursesEffected": "",
+      "action": "New PDF request",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "2026-06-02",
+      "reviewer": "Josie N",
+      "course": "Year 5 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Video",
+      "comment": "More support for composition",
+      "coursesEffected": "Grade 5 Unit 2",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy errors on PDF",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "1",
+      "step": "Teach 5",
+      "comment": "Wrong video",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "1",
+      "step": "Teach 6",
+      "comment": "Wrong video",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Video",
+      "comment": "Rescript and refilm",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Remove '3/4 time' from bottom of final image",
+      "coursesEffected": "",
+      "action": "Update PNG and KC copy",
+      "assets": "PNG",
+      "assetType": "PNG",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "2",
+      "step": "Worksheets",
+      "comment": "Number first question",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "2",
+      "step": "Teach 3",
+      "comment": "Remove '3/4 time' from bottom of slide",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Add keyboard graphic to show G#",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Missing PDF",
+      "coursesEffected": "",
+      "action": "New PDF request",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "3",
+      "step": "Worksheets",
+      "comment": "Keyboard image needs to show the note G#",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Fix graphic to show 'claves or drumsticks'",
+      "coursesEffected": "",
+      "action": "Update Video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "4 CPD",
+      "step": "Guidance sheet",
+      "comment": "Fix copy",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "4",
+      "step": "Teach 3",
+      "comment": "Update audio on video to match graphic",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-02-26",
+      "actioned": 1
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "4",
+      "step": "Teach 7",
+      "comment": "Edit graphic to remove 'put down'",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "4",
+      "step": "Teach 10",
+      "comment": "Change 'put' to 'table'  to match slide 8",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 5 Unit 2",
+      "lesson": "5",
+      "step": "Subject Knowledge",
+      "comment": "Some words not capitalised",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-06-03",
+      "reviewer": "Josie N",
+      "course": "Year 6 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Update definitions with Josie's version",
+      "coursesEffected": "Grade 6 Unit 1",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "4 beat question is registering the wrong answer",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "1",
+      "step": "Teach 7",
+      "comment": "Add Kodaly words to audio",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "1",
+      "step": "Teach 8",
+      "comment": "New graphics using Josie's notes",
+      "coursesEffected": "",
+      "action": "Request new PNGs, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edit for grammatical accuracy",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Lesson plan",
+      "comment": "Copy missing for Teach 2",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2 CPD",
+      "step": "All Files",
+      "comment": "Include new lesson plan as above",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Remove quiz",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2",
+      "step": "Worksheets",
+      "comment": "Copy edit",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2",
+      "step": "Lesson plan",
+      "comment": "New pdf from above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2",
+      "step": "Teach 2",
+      "comment": "Edit audio to begin with voice saying 1,2,3,4,",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "2",
+      "step": "Teach 3",
+      "comment": "Update graphic copy",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edit changing all 'staff' to 'stave'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Knowledge Check",
+      "comment": "Update treble clef image to just the treble clef symbol",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Lesson plan",
+      "comment": "Update copy in introduce section to say 'show slide 3 and 4 with mnemonics'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "3 CPD",
+      "step": "All Files",
+      "comment": "Include new lesson plan as above",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "3",
+      "step": "Lesson plan",
+      "comment": "New pdf from above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edit first para, delete second page",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "4",
+      "step": "Teach 3",
+      "comment": "Copy edit on PDF",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "4",
+      "step": "Teach 7",
+      "comment": "Copy edit on PDF",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 1",
+      "lesson": "4",
+      "step": "Teach 8",
+      "comment": "Add metronome to audio",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "2026-06-03",
+      "reviewer": "Josie N",
+      "course": "Year 6 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Video",
+      "comment": "Cut 2:00 to 2:12 'Drawing attention... his hearing'",
+      "coursesEffected": "Grade 6 Unit 2",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-03-23",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Question 2 typo, incorrect answer selection",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "1",
+      "step": "Flashcards",
+      "comment": "Copy error on first flashcard",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Capitalisation inconsistencies in copy",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Grammatical errors and incorrect content.",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "3",
+      "step": "Teach 6",
+      "comment": "New audio needed to play correct melodies",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 3,
+      "responsible": "Ciara",
+      "deadline": "Mar ",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Remove suggestion to adapt warm ups with other nursery rhymes",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "4",
+      "step": "Teach 5",
+      "comment": "Copy error on slide",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Unclear and unnecessary copy at start. Edit by JN notes.",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "5",
+      "step": "Worksheets",
+      "comment": "Element word bank- remove instrument examples from each family",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "6",
+      "step": "Assessment sheet",
+      "comment": "Copy edit: missing hyphen from 'call-and-response'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "6",
+      "step": "Worksheets",
+      "comment": "Elements word bank as above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 6 Unit 2",
+      "lesson": "6",
+      "step": "Introduce 1",
+      "comment": "Remove text in brackets from slide.",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "25/03/2026",
+      "reviewer": "Ciara",
+      "course": "Year 1 and Year 2 Unit 1",
+      "lesson": "All Lessons",
+      "step": "Warm Up",
+      "comment": "Move to be after LO",
+      "coursesEffected": "",
+      "action": "Move step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 All units",
+      "lesson": "Several lessons",
+      "step": "Warm Up 2",
+      "comment": "Update copy to not say 'such as'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 All units",
+      "lesson": "Several lessons",
+      "step": "Warm Up 5",
+      "comment": "Copy werror in spelling of 'guiro'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 All units",
+      "lesson": "Several lessons",
+      "step": "Warm Up 6",
+      "comment": "Remove questions",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "23/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 1 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Lyrics",
+      "comment": "Need to add lyrics to audio",
+      "coursesEffected": "",
+      "action": "Update audio",
+      "assets": "Audio",
+      "assetType": "Audio",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Update or remove two unclear questions",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "2",
+      "step": "Let's Sing",
+      "comment": "Step name missing apostrophe",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "2",
+      "step": "Teach 10",
+      "comment": "Incorrect audio, should be brass",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "3",
+      "step": "Let's Sing",
+      "comment": "Step name missing apostrophe",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Key Questions",
+      "comment": "Formatting errors; bullet point and capital letter missing on last question",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "4 CPD",
+      "step": "Knowledge Check",
+      "comment": "Remove",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "4",
+      "step": "Teach 2",
+      "comment": "Audio needs to change tempo throughout",
+      "coursesEffected": "",
+      "action": "Update audio",
+      "assets": "Audio",
+      "assetType": "Audio",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "No explanation of Ta and Ti-ti or clapping demo",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Unclear slides",
+      "coursesEffected": "",
+      "action": "Update PNG",
+      "assets": "PNG, then interactive",
+      "assetType": "Interactive",
+      "urgency": 0,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 2",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 3",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 4",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 5",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 6",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 7",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 8",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "5",
+      "step": "Teach 9",
+      "comment": "Add audio",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 1",
+      "lesson": "6",
+      "step": "Let's Sing",
+      "comment": "Step name missing apostrophe",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "23/03/2026",
+      "reviewer": "Joise N",
+      "course": "Year 1 Unit 2",
+      "lesson": "Overview",
+      "step": "Video",
+      "comment": "Wrong video linked",
+      "coursesEffected": "",
+      "action": "Update vimeo link on step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Wrong video linked",
+      "coursesEffected": "",
+      "action": "Update vimeo link on step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 2",
+      "lesson": "3 CPD",
+      "step": "Knowledge Check",
+      "comment": "Remove",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 2",
+      "lesson": "4 CPD",
+      "step": "Knowledge Check",
+      "comment": "Update 'crescendo' definition and check answers",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Replace questions with new copy",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 2",
+      "lesson": "5",
+      "step": "Introduce 1",
+      "comment": "New audio that showcases a few instruments clealry",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "31/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 1 Unit 3",
+      "lesson": "1 CPD",
+      "step": "Video",
+      "comment": "Cut to match changes. 3.16 cut after 'stay the same' to 'at all' at 3.20",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1 CPD",
+      "step": "Lesson plan",
+      "comment": "Remove copy on page two from '(e.g., guitar..they heard'. Adjust slide numbers for removal of slide 3",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1",
+      "step": "Teach 2",
+      "comment": "Remove",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1",
+      "step": "Teach 3",
+      "comment": "Rename to Teach 2",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1",
+      "step": "Teach 4",
+      "comment": "Rename to Teach 3",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "1",
+      "step": "Teach 5",
+      "comment": "Rename to Teach 4",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "New audio needed on q 2 and q3",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "2",
+      "step": "Reflect",
+      "comment": "New audio needed with better distinction in pitch and dynamics",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "4",
+      "step": "All",
+      "comment": "Re-write lesson plan and slides",
+      "coursesEffected": "",
+      "action": "All",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": -1,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "4",
+      "step": "Teach 2",
+      "comment": "Music needs to be faster tempo",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "4",
+      "step": "Teach 3",
+      "comment": "Song should be played once, then repeated at much faster tempo",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "4",
+      "step": "Teach 4",
+      "comment": "Replace with PDF showing alphabet, sheep and stars",
+      "coursesEffected": "",
+      "action": "New PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "6 CPD",
+      "step": "Lesson plan",
+      "comment": "Fix copy on page 3 to say 'slide 2' instead of 'slide 3'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 3",
+      "lesson": "6",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "31/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 1 Unit 4",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Move intructions to start of quiz and delete question 6",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "1 CPD",
+      "step": "Lesson plan",
+      "comment": "Fix copy on page 2 so 'teach 2' says 'teach 3' and Before 'demonstrate' it says 'Show slide 2 and demonstrate'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "1",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "1",
+      "step": "Teach 2",
+      "comment": "Change image to another child",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Fix copy to change \u2018the whole lyric for this is below\u2019 to \u2018the full lyrics for this are below\u2019",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2 CPD",
+      "step": "Knowledge Check",
+      "comment": "Answers filed incorrectly and doesn't show which are right/wrong",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2 CPD",
+      "step": "Lesson plan",
+      "comment": "Fix copy on page two to remove repeated 'Start by playing a very high note and ask:'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2",
+      "step": "Teach 2",
+      "comment": "Delete",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2",
+      "step": "Teach 3",
+      "comment": "Rename step as Teach 2",
+      "coursesEffected": "",
+      "action": "Update step name",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2",
+      "step": "Teach 4",
+      "comment": "Delete",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "2",
+      "step": "Teach 5",
+      "comment": "Delete",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Wrong video linked",
+      "coursesEffected": "",
+      "action": "Update vimeo link on step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "3 CPD",
+      "step": "Lesson plan",
+      "comment": "Remove 'tell the pupils that you're going to practise...clap on it'. Change 'clap the rhythm' on page 4 to 'clap the beat' and remove 'Emphasise... to the rhythm'. On page 4 remove 'Clap the rhythm of their..different rhythms' and 'and see how the rhythm changes'. Add slide numbers.",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "3",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "4 CPD",
+      "step": "Knowledge Check",
+      "comment": "Typo, should say \u2018pianississimo, not \u2018pianoississimo\u2019.",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "4 CPD",
+      "step": "Lesson plan",
+      "comment": "Change 'Listen to the music on the slide' to 'Listen to the music on slide 2'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 4",
+      "lesson": "4",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-01-04",
+      "reviewer": "Josie N",
+      "course": "Year 1 Unit 5",
+      "lesson": "1 CPD",
+      "step": "Lesson plan",
+      "comment": "Copy errors confusing rhythm and beat",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "1",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "2 CPD",
+      "step": "Lesson plan",
+      "comment": "Copy error confusing rhythm and beat, rogue line that needs removing",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "2",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "Round videos are not in time",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "3 CPD",
+      "step": "Lesson plan",
+      "comment": "Add note to say when Group 2 should join in",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "3",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Round videos are not in time",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "4 CPD",
+      "step": "Lesson plan",
+      "comment": "Add note to say when each should join in, remove 'you may'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "4",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 5",
+      "lesson": "5",
+      "step": "Teach 6",
+      "comment": "Change slide to 'tell me ma' not 'my ma'",
+      "coursesEffected": "",
+      "action": "Update PNG",
+      "assets": "PNG, then video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "2026-01-04",
+      "reviewer": "Josie N",
+      "course": "Year 1 Unit 6",
+      "lesson": "2 CPD",
+      "step": "Lesson plan",
+      "comment": "Remove line \"*If you don\u2019t have access to these instruments, you\ncan use the images provided on the slides.\"",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 1 Unit 6",
+      "lesson": "2",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "27/03/2026",
+      "reviewer": "Ciara F",
+      "course": "Reception Unit 5",
+      "lesson": "6",
+      "step": "Worksheets",
+      "comment": "Remove emotion picture cards",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "23/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 1",
+      "lesson": "Unit CPD",
+      "step": "Audit",
+      "comment": "un-tuned' doesn't need an apostrophe",
+      "coursesEffected": "Grade 2 Unit 1",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Subject Knowledge",
+      "comment": "first paragraph missing space in 'are determined'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Quiz in wrong place?",
+      "coursesEffected": "",
+      "action": "Remove and reassign new quiz",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "1 CPD",
+      "step": "Lesson plan",
+      "comment": "\u2018p\u2019 missing from the word \u2018play\u2019 in curriculum links box",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "1",
+      "step": "Lesson plan",
+      "comment": "New pdf from above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "3 CPD",
+      "step": "Knowledge Check",
+      "comment": "Several copy errors including title",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "3",
+      "step": "Warm Up",
+      "comment": "Move step (Effects entire unit)",
+      "coursesEffected": "",
+      "action": "Move step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "4",
+      "step": "Lesson plan",
+      "comment": "Remove word 'singing' from warm up box",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "Demonstrate ti-ti and too rhythms in hot cross buns. Remove line 'As we reach the end... ta, ti-ti'",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edits needed, a movement of spacing of notation in table",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Question 2 is repeated and graphics are unclear",
+      "coursesEffected": "",
+      "action": "Update PNG and KC copy",
+      "assets": "PNG, then interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "6 CPD",
+      "step": "Lesson plan",
+      "comment": "Colours of orange and red text indistinguishable",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "6",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "6",
+      "step": "Worksheets",
+      "comment": "Notes distorted on sheet",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 1",
+      "lesson": "6",
+      "step": "Reflect",
+      "comment": "Move yellow notes to be same height",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "23/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Subject Knowledge 2",
+      "comment": "Reorder table from Grave to Prestissimo",
+      "coursesEffected": "Grade 2 Unit 2",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "1 CPD",
+      "step": "Lesson plan",
+      "comment": "Change copy from 'what makes it difficult to clap along to music?' to 'what helps you clap along to the music?'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "1",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 1,
+      "responsible": "Brandon",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "1",
+      "step": "Teach 3",
+      "comment": "Video is dancing to a different beat than that of the music",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "2 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Copy edit about 'classical tradition'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "2",
+      "step": "Worksheets",
+      "comment": "Remove step",
+      "coursesEffected": "",
+      "action": "Remove step",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 2",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Apostrophe missing from question 2 after \u2018Peter and the Wolf",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "31/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 3",
+      "lesson": "1 CPD",
+      "step": "Knowledge Check",
+      "comment": "Needs new audio for rhythms 2, 3 and 4",
+      "coursesEffected": "",
+      "action": "New audio, then KC",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "1",
+      "step": "Warm Up",
+      "comment": "Fix copy from 'rhythm getting faster or slower\u2019, which should be 'tempo getting faster or slower\u2019.",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "1",
+      "step": "Introduce 1",
+      "comment": "Would be easier with a simpler rhythmic accompaniment, with emphasis on the beat",
+      "coursesEffected": "",
+      "action": "Update audio then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "4 CPD",
+      "step": "Lesson plan",
+      "comment": "Fix slide references in introduce section",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "4",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "4",
+      "step": "Worksheets",
+      "comment": "Add in Do Re Mi sheet",
+      "coursesEffected": "",
+      "action": "Create PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "4",
+      "step": "Teach 5",
+      "comment": "Update PNG, 'mi' on second line should be coloured-in or not",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5 CPD",
+      "step": "Video",
+      "comment": "Au Clair de la Lune' grpahic erros",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5 CPD",
+      "step": "Knowledge Check",
+      "comment": "Change definitions from \u2018become louder\u2019 and \u2018become quieter\u2019 to \u2018gradually getting louder\u2019 and \u2018gradually getting quieter\u2019",
+      "coursesEffected": "",
+      "action": "Update KC copy",
+      "assets": "Interactive",
+      "assetType": "Interactive",
+      "urgency": 2,
+      "responsible": "Brandon",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5 CPD",
+      "step": "Subject Knowledge",
+      "comment": "Guiro has been put in the tuned percussion column, but it should be in untuned",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5",
+      "step": "Worksheets",
+      "comment": "\u2018mi\u2019 on second line should be coloured in",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5",
+      "step": "Teach 2",
+      "comment": "\u2018mi\u2019 on second line should be coloured in",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "5",
+      "step": "Teach 3",
+      "comment": "\u2018mi\u2019 on second line should be coloured in",
+      "coursesEffected": "",
+      "action": "Update PNG, then video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "6",
+      "step": "Worksheet 1",
+      "comment": "Remove text 'without notes'",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 3",
+      "lesson": "6",
+      "step": "Worksheet 2",
+      "comment": "Remove text 'without notes' and colour in the blue note on q1 and q3",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "31/03/2026",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 4",
+      "lesson": "3",
+      "step": "Teach 5",
+      "comment": "Add to track saying 1, 2, 3, 4, or an audible click for 4 beats with the numbers on screen?",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 4",
+      "lesson": "6",
+      "step": "Teach 3",
+      "comment": "As above, and could we have an instrument come in playing the melody to guide the pupils?",
+      "coursesEffected": "",
+      "action": "New audio, then video",
+      "assets": "Audio, then video",
+      "assetType": "Video",
+      "urgency": 1,
+      "responsible": "Ciara",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-02-04",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 5",
+      "lesson": "3 CPD",
+      "step": "Video",
+      "comment": "",
+      "coursesEffected": "",
+      "action": "",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": -1,
+      "responsible": "Unassigned",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 5",
+      "lesson": "3 CPD",
+      "step": "Lesson plan",
+      "comment": "Copy errors",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 5",
+      "lesson": "3",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 5",
+      "lesson": "3",
+      "step": "Reflect 2",
+      "comment": "Remove answers, just show images",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 5",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Add instrumental demo",
+      "coursesEffected": "",
+      "action": "Rescript and refilm",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 5",
+      "lesson": "6",
+      "step": "Teach 4",
+      "comment": "",
+      "coursesEffected": "",
+      "action": "",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": -1,
+      "responsible": "Unassigned",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "2026-02-04",
+      "reviewer": "Josie N",
+      "course": "Year 2 Unit 6",
+      "lesson": "4 CPD",
+      "step": "Video",
+      "comment": "Cut from 3.59 to 4.03. 'And the beats are twice as fast as before'",
+      "coursesEffected": "",
+      "action": "Update video",
+      "assets": "Video",
+      "assetType": "Video",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 6",
+      "lesson": "4 CPD",
+      "step": "Lesson plan",
+      "comment": "Some incorrect formatting (bold and unbold)",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 6",
+      "lesson": "4",
+      "step": "Lesson plan",
+      "comment": "As above",
+      "coursesEffected": "",
+      "action": "Update step with new file",
+      "assets": "Step",
+      "assetType": "Step",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 2 Unit 6",
+      "lesson": "4",
+      "step": "Warm Up",
+      "comment": "Fix copy as unclear, see JN notes",
+      "coursesEffected": "",
+      "action": "Update PDF",
+      "assets": "PDF",
+      "assetType": "PDF",
+      "urgency": 2,
+      "responsible": "Ciara",
+      "deadline": "2026-11-01",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 4",
+      "lesson": "2 CPD",
+      "step": "Lesson plan",
+      "comment": "Fix copy to remove 'Once... choruses' on page 4.",
+      "coursesEffected": "",
+      "action": "",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": -1,
+      "responsible": "Unassigned",
+      "deadline": "",
+      "actioned": 0
+    },
+    {
+      "date": "",
+      "reviewer": "",
+      "course": "Year 3 Unit 4",
+      "lesson": "2",
+      "step": "Lesson plan",
+      "comment": "",
+      "coursesEffected": "",
+      "action": "",
+      "assets": "",
+      "assetType": "Other",
+      "urgency": -1,
+      "responsible": "Unassigned",
+      "deadline": "",
+      "actioned": 0
     }
-  }
-  document.getElementById("ab").innerHTML = h;
+  ],
+  "lastUpdated": "2026-04-27 13:56"
+};
 
-  // Responsibility
-  var rct = {}, rcd = {};
-  for (var i=0; i<F.length; i++) {
-    var r = F[i].r;
-    if (r) { rct[r]=(rct[r]||0)+1; if(F[i].d===1) rcd[r]=(rcd[r]||0)+1; }
-  }
-  var rsr = Object.keys(rct).sort(function(a,b){ return rct[b]-rct[a]; });
-  var cols = ["#6c5ce7","#0984e3","#00b894","#e17055","#fdcb6e"];
-  var rh = "";
-  for (var k=0; k<rsr.length; k++) {
-    var n=rsr[k], c=rct[n], dn=rcd[n]||0;
-    rh += '<li><span class="rd" style="background:'+cols[k%cols.length]+'"></span>'+n+'<span class="rc">'+c+' ('+dn+' done)</span></li>';
-  }
-  document.getElementById("rl").innerHTML = rh || '<li style="color:#636e72">No issues for this filter</li>';
+document.getElementById('updated').textContent = 'Updated ' + DATA.lastUpdated;
 
-  // Course table
-  var cct = {}, ccd = {};
-  for (var i=0; i<F.length; i++) {
-    var c = F[i].c;
-    cct[c] = (cct[c]||0)+1;
-    if (F[i].d===1) ccd[c] = (ccd[c]||0)+1;
-  }
-  var csr = Object.keys(cct).sort(function(a,b){ return cct[b]-cct[a]; });
-  var ch = "";
-  for (var k=0; k<csr.length; k++) {
-    var c=csr[k], t=cct[c], dn=ccd[c]||0, p=t>0?Math.round((dn/t)*100):0;
-    ch += '<tr><td>'+c+'</td><td>'+t+'</td><td>'+dn+'</td><td>'+p+'% <span class="mb"><span class="mbf" style="width:'+p+'%;'+(p===0?'background:#dfe6e9':'')+'"></span></span></td></tr>';
-  }
-  document.querySelector("#ctb tbody").innerHTML = ch || '<tr><td colspan="4" style="color:#636e72">No issues for this filter</td></tr>';
+// Progress ring
+const total = DATA.total, actioned = DATA.actioned, outstanding = DATA.outstanding;
+const pct = total > 0 ? actioned / total : 0;
+const circumference = 2 * Math.PI * 78;
+document.getElementById('ringFg').setAttribute('stroke-dasharray', circumference);
+setTimeout(() => {
+  document.getElementById('ringFg').setAttribute('stroke-dashoffset', circumference * (1 - pct));
+}, 100);
+document.getElementById('ringPct').textContent = Math.round(pct * 100) + '%';
+document.getElementById('sActioned').textContent = actioned;
+document.getElementById('sOut').textContent = outstanding;
+document.getElementById('sTotal').textContent = total;
 
-  // Issue list
-  var ih = "";
-  for (var i=0; i<F.length; i++) {
-    var d=F[i], m=UM[d.u];
-    ih += '<div class="ic"><div class="it"><span class="icr">'+d.c+' - '+d.s+'</span><span class="ib b'+d.u+'">'+m.l+' ('+d.u+')</span></div><div class="icm">'+d.cm+'</div><div class="im"><span>Asset: '+d.as+'</span><span>Action: '+d.ac+'</span><span>Owner: '+(d.r||'N/A')+'</span><span class="'+(d.d?'sd':'sp')+'">'+(d.d?'Actioned':'Pending')+'</span>'+(d.dl?'<span>Due: '+d.dl+'</span>':'')+'</div></div>';
+// Asset bars
+const assetColors = {
+  'PDF': 'var(--red)',
+  'Video': 'var(--purple)',
+  'Interactive': 'var(--cyan)',
+  'PNG': 'var(--pink)',
+  'Audio': 'var(--yellow)',
+  'Step': 'var(--green)',
+  'Other': 'var(--text-dim)',
+};
+const sortedAssets = Object.entries(DATA.assetCounts).sort((a, b) => b[1] - a[1]);
+const maxAsset = sortedAssets.length ? sortedAssets[0][1] : 1;
+const assetBarsEl = document.getElementById('assetBars');
+sortedAssets.forEach(([k, v]) => {
+  const w = (v / maxAsset) * 100;
+  assetBarsEl.innerHTML += `
+    <div class="bar-row">
+      <div class="bar-label">${k}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: ${w}%; background: ${assetColors[k] || 'var(--accent)'};"></div>
+      </div>
+      <div class="bar-value">${v}</div>
+    </div>`;
+});
+
+// Urgency
+['0','1','2','3'].forEach(u => {
+  document.getElementById('u'+u).textContent = DATA.urgencyCounts[u] || 0;
+});
+
+// Responsibility
+const respColors = ['var(--accent)', 'var(--purple)', 'var(--cyan)', 'var(--orange)', 'var(--green)'];
+const respList = document.getElementById('respList');
+const sortedResp = Object.entries(DATA.respActioned).sort((a, b) => b[1].total - a[1].total);
+sortedResp.forEach(([name, stats], i) => {
+  const initial = name.charAt(0).toUpperCase();
+  const pctR = stats.total > 0 ? (stats.actioned / stats.total * 100) : 0;
+  respList.innerHTML += `
+    <div class="resp-row">
+      <div class="resp-avatar" style="background: ${respColors[i % respColors.length]};">${initial}</div>
+      <div class="resp-info">
+        <div class="resp-name">${name}</div>
+        <div class="resp-meta">${stats.actioned} of ${stats.total} actioned</div>
+        <div class="resp-bar"><div class="resp-bar-fill" style="width: ${pctR}%;"></div></div>
+      </div>
+      <div class="resp-stats"><strong>${stats.total}</strong><br><span style="font-size:10px;">issues</span></div>
+    </div>`;
+});
+
+// Top courses
+const courseBars = document.getElementById('courseBars');
+const sortedCourses = Object.entries(DATA.courseCounts).sort((a, b) => b[1] - a[1]);
+const maxCourse = sortedCourses.length ? sortedCourses[0][1] : 1;
+sortedCourses.forEach(([k, v]) => {
+  const w = (v / maxCourse) * 100;
+  courseBars.innerHTML += `
+    <div class="bar-row">
+      <div class="bar-label" style="flex: 0 0 130px;">${k}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: ${w}%; background: linear-gradient(90deg, var(--accent), var(--accent-2));"></div>
+      </div>
+      <div class="bar-value">${v}</div>
+    </div>`;
+});
+
+// Issues table + filters
+const filters = { status: 'all', urgency: 'all', asset: 'all', search: '' };
+
+function render() {
+  const tbody = document.getElementById('issueBody');
+  const filtered = DATA.issues.filter(i => {
+    if (filters.status === 'open' && i.actioned === 1) return false;
+    if (filters.status === 'done' && i.actioned === 0) return false;
+    if (filters.urgency !== 'all' && String(i.urgency) !== filters.urgency) return false;
+    if (filters.asset !== 'all' && i.assetType !== filters.asset) return false;
+    if (filters.search) {
+      const s = filters.search.toLowerCase();
+      const blob = (i.course + ' ' + i.lesson + ' ' + i.step + ' ' + i.comment + ' ' + i.action + ' ' + i.responsible).toLowerCase();
+      if (!blob.includes(s)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('resultsCount').textContent = `Showing ${filtered.length} of ${DATA.issues.length} issues`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" class="empty">No issues match current filters.</td></tr>';
+    return;
   }
-  document.getElementById("il").innerHTML = ih || '<div style="color:#636e72;font-size:13px;padding:12px">No issues for this filter</div>';
+
+  tbody.innerHTML = filtered.map(i => {
+    const tagClass = 'tag-' + (i.assetType || 'other').toLowerCase();
+    const urgClass = i.urgency >= 0 ? 'u' + i.urgency : 'un';
+    const urgVal = i.urgency >= 0 ? i.urgency : '–';
+    const actCell = i.actioned === 1
+      ? '<span class="actioned-y">YES</span>'
+      : '<span class="actioned-n">—</span>';
+    return `<tr>
+      <td>${escape(i.course)}</td>
+      <td>${escape(i.lesson)}</td>
+      <td>${escape(i.step)}</td>
+      <td class="comment-cell">${escape(i.comment)}</td>
+      <td class="comment-cell">${escape(i.action)}</td>
+      <td><span class="tag ${tagClass}">${escape(i.assetType)}</span></td>
+      <td><span class="urg-pill ${urgClass}">${urgVal}</span></td>
+      <td>${escape(i.responsible)}</td>
+      <td>${actCell}</td>
+    </tr>`;
+  }).join('');
 }
 
-populateUnitFilter();
-renderAll();
+function escape(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    const v = btn.dataset.value;
+    document.querySelectorAll(`.filter[data-filter="${f}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filters[f] = v;
+    render();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  filters.search = e.target.value;
+  render();
+});
+
+render();
 </script>
 </body>
 </html>
